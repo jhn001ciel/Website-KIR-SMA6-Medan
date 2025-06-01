@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pendaftaran Anggota KIR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e0f2f1, #ffffff);
+      color: #333;
+      min-height: 100vh;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    header {
+      background: linear-gradient(to right, #00695c, #00897b);
+      color: #fff;
+      height: 70px;
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1050;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .menu-icon {
+      font-size: 28px;
+      cursor: pointer;
+      user-select: none;
+      margin-right: 15px;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .logo {
+      height: 40px;
+      user-select: none;
+    }
+    header h3 {
+      font-weight: 600;
+      font-size: 1.3rem;
+      user-select: none;
+    }
+    nav#sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      width: 270px;
+      background: linear-gradient(to bottom, #004d40, #00796b);
+      padding: 16px 20px 20px;
+      transform: translateX(-100%);
+      transition: transform .3s;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 3px 0 10px rgba(0,0,0,0.3);
+    }
+    nav#sidebar.show { transform: translateX(0); }
+    nav#sidebar .sidebar-header {
+      color: #b2dfdb;
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 6px;
+      border-bottom: none;
+      padding-bottom: 0;
+      user-select: none;
+    }
+    /* Hiasan garis dengan ikon */
+    .sidebar-decoration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0 12px 0;
+      user-select: none;
+    }
+    .sidebar-decoration .line {
+      flex: 1;
+      height: 1.5px;
+      background: linear-gradient(to right, #b2dfdb, #00796b, #b2dfdb);
+      border-radius: 2px;
+    }
+    .sidebar-decoration .icon {
+      color: #ffeb3b;
+      font-size: 1.2rem;
+      margin: 0 10px;
+      filter: drop-shadow(0 0 2px #004d40);
+    }
+    nav#sidebar ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    nav#sidebar ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: .3s;
+    }
+    nav#sidebar ul li a:hover,
+    nav#sidebar ul li a.active {
+      color: #ffeb3b;
+      transform: translateX(6px);
+    }
+    nav#sidebar .credit {
+      color: #b2dfdb;
+      font-size: .85rem;
+      text-align: center;
+      padding-top: 10px;
+      border-top: 1px solid #004d40;
+    }
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,.3);
+      opacity: 0; visibility: hidden;
+      transition: .3s;
+      z-index: 1090;
+    }
+    #overlay.active { opacity: 1; visibility: visible; }
+    main {
+      padding: 100px 30px 100px;
+      max-width: 900px;
+      margin: 0 auto;
+      transition: filter .3s;
+    }
+    main.blur { filter: blur(3px); pointer-events: none; }
+    section {
+      display: none;
+      background: #fff;
+      padding: 25px 30px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      line-height: 1.6;
+      font-size: 1rem;
+      animation: fadeIn .5s;
+    }
+    section.active { display: block; }
+    section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #00695c;
+    }
+    section ul {
+      padding-left: 20px;
+      margin-bottom: 15px;
+    }
+    section ul li {
+      margin-bottom: 8px;
+    }
+    section p {
+      margin-bottom: 15px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    form input, form select, form textarea {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    form button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #00796b;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .3s;
+    }
+    form button:hover { background: #004d40; }
+    .divisi-item {
+      background: #004d40;
+      color: #b2dfdb;
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      user-select: none;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .divisi-item:hover, .divisi-item.active {
+      background: #00796b;
+      color: #fff;
+    }
+    .subdivisi {
+      display: none;
+      margin-bottom: 15px;
+      padding-left: 15px;
+    }
+    .subdivisi.active {
+      display: block;
+    }
+    .subdivisi ul {
+      list-style: disc;
+      color: #004d40;
+    }
+    .subdivisi ul li {
+      margin-bottom: 6px;
+    }
+    body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0f2f1, #ffffff);
+  color: #333;
+}
+    main {
+  flex: 1; 
+  padding: 100px 30px 100px;
+  max-width: 900px;
+  margin: 0 auto;
+  transition: filter .3s;
+}
+    footer {
+      height: 30px;
+      background: #ccc;
+      color: #333;
+      font-size: 12px;
+      text-align: center;
+      line-height: 30px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 768px) {
+      nav#sidebar { width: 70%; }
+      main { padding: 100px 15px 80px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="menu-icon" id="menuBtn">☰</div>
+    <div class="logo-area">
+      <img src="https://i0.wp.com/sman6medan.sch.id/wp-content/uploads/2024/05/Logo_SMAN_6_Mdn_warna-rBG.png?w=440&ssl=1" alt="Logo sman6medan" class="logo" />
+      <img src="1748749335244.png" alt="Logo KIR" class="logo" />
+      <h3>Pendaftaran Anggota KIR</h3>
+    </div>
+  </header>
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-header">Menu Utama</div>
+    <div class="sidebar-decoration">
+      <div class="line"></div>
+      <i class="bi bi-star-fill icon"></i>
+      <div class="line"></div>
+    </div>
+    <ul>
+      <li><a href="#" data-page="beranda" class="active"><i class="bi bi-house"></i>Beranda</a></li>
+      <li><a href="#" data-page="kegiatan"><i class="bi bi-calendar-event"></i>Kegiatan</a></li>
+      <li><a href="#" data-page="divisi"><i class="bi bi-diagram-3"></i>Divisi</a></li>
+      <li><a href="#" data-page="galeri"><i class="bi bi-image"></i>Galeri</a></li>
+      <li><a href="#" data-page="daftar"><i class="bi bi-pencil-square"></i>Daftar</a></li>
+    </ul>
+    <div class="credit">credit by.@vyx.official - @l0stch</div>
+  </nav>
+  <!-- OVERLAY -->
+  <div id="overlay"></div>
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+    <section id="beranda" class="active">
+      <h2>Selamat Datang di KIR!</h2>
+      <p>KIR (Karya Ilmiah Remaja) adalah wadah untuk mengembangkan kemampuan riset dan penalaran ilmiah bagi pelajar.</p>
+      <p>Bergabunglah dan kembangkan ide kreatifmu bersama teman-teman seide!</p>
+    </section>
+    <section id="kegiatan">
+      <h2>Kegiatan Kami</h2>
+      <ul>
+        <li>Diskusi dan penelitian mingguan</li>
+        <li>Workshop dan seminar ilmiah</li>
+        <li>Pelatihan penulisan karya ilmiah</li>
+        <li>Lomba KIR tingkat regional dan nasional</li>
+      </ul>
+      <p>Semua kegiatan terbuka bagi anggota aktif KIR.</p>
+    </section>
+    <section id="divisi">
+      <h2>Divisi KIR</h2>
+      <p>Kami memiliki tiga divisi utama:</p>
+      <div class="divisi-item" onclick="toggleSubdivisi('sains', this)">Divisi Sains</div>
+      <div id="sub-sains" class="subdivisi">
+        <ul><li>Biologi</li><li>Fisika</li><li>Kimia</li></ul>
+      </div>
+      <div class="divisi-item" onclick="toggleSubdivisi('sosial', this)">Divisi Sosial</div>
+      <div id="sub-sosial" class="subdivisi">
+        <ul><li>Ekonomi</li><li>Sosiologi</li><li>Antropologi</li></ul>
+      </div>
+      <div class="divisi-item" onclick="toggleSubdivisi('teknologi', this)">Divisi Teknologi</div>
+      <div id="sub-teknologi" class="subdivisi">
+        <ul><li>Robotika</li><li>Informatika</li><li>Elektronika</li></ul>
+      </div>
+    </section>
+    <section id="galeri">
+      <h2>Galeri Kegiatan</h2>
+      <p>Dokumentasi terbaru akan ditampilkan di sini.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <img src="1748747182127.jpg" alt="Diskusi" style="width:30%;border-radius:6px;" />
+        <img src="1748747182148.jpg" alt="Workshop" style="width:30%;border-radius:6px;" />
+        <img src="1748747182161.jpg" alt="Lomba" style="width:30%;border-radius:6px;" />
+        <img src="1748747182174.jpg" alt="Lomba" style="width:30%;border-radius:6px;" />
+        <img src="1748747182191.jpg" alt="Lomba" style="width:30%;border-radius:6px;" />
+        <img src="1748747182200.jpg" alt="Lomba" style="width:30%;border-radius:6px;" />
+        <img src="1748747182207.jpg" alt="Lomba" style="width:30%;border-radius:6px;" />
+      </div>
+    </section>
+    <section id="daftar">
+      <h2>Form Pendaftaran Anggota</h2>
+      <p>Isi data berikut untuk bergabung:</p>
+      <form action="https://formsubmit.co/registkir@gmail.com" method="POST">
+  <input type="hidden" name="_next" value="terimakasih.html" />
+
+  <input type="text" name="nama_lengkap" placeholder="Nama Lengkap" required />
+  <input type="email" name="email" placeholder="Email Aktif" required />
+  <input type="number" name="nomor_hp" placeholder="Masukkan Nomor Aktif" required />
+
+  <select name="gender" required>
+    <option value="" disabled selected>Pilih gender♀️♂️</option>
+    <option value="laki-laki">♂️ Laki-laki</option>
+    <option value="perempuan">♀️ Perempuan</option>
+  </select>
+
+  <textarea name="alasan" rows="4" placeholder="Alasan bergabung" required></textarea>
+
+  <p><strong>Contact Person:</strong></p>
+  <p>• WhatsApp: 0895-6260-06300 - Mimin Raka</p>
+  <p>• Instagram: @kir.smansix</p><br>
+
+  <h3>Persetujuan Orang Tua / Wali</h3>
+  <label>
+    <input type="checkbox" name="izin_wali" required>
+    Saya sebagai orang tua/wali menyetujui bahwa anak saya mengikuti kegiatan ini.
+  </label><br><br> 
+
+  <button type="submit">Daftar Sekarang</button>
+</form>
+    </section>
+  </main>
+    <footer>&copy; 2025 Karya Ilmiah Remaja SMA Negeri 6 Medan </footer>
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const mainContent = document.getElementById('main-content');
+    const links = sidebar.querySelectorAll('ul li a');
+    function toggleMenu(forceClose = false) {
+      const open = sidebar.classList.contains('show');
+      if (open || forceClose) {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('active');
+        mainContent.classList.remove('blur');
+      } else {
+        sidebar.classList.add('show');
+        overlay.classList.add('active');
+        mainContent.classList.add('blur');
+      }
+    }
+    menuBtn.addEventListener('click', () => toggleMenu());
+    overlay.addEventListener('click', () => toggleMenu(true));
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        document.querySelectorAll('main section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(link.dataset.page).classList.add('active');
+        toggleMenu(true);
+      });
+    });
+    function toggleSubdivisi(id, el) {
+      document.querySelectorAll('.subdivisi').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.divisi-item').forEach(d => d.classList.remove('active'));
+      document.getElementById('sub-' + id).classList.add('active');
+      el.classList.add('active');
+    }
+  </script>
+</body>
+</html>
